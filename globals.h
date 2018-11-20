@@ -6,30 +6,30 @@
 
 #include <QString>
 
-unsigned seed = std::chrono::system_clock::now().time_since_epoch().count();
+extern unsigned seed;
 
 //Position strings
-const QString DECK = "Deck";
-const QString LANE = "Lane";
-const QString HAND = "Hand";
-const QString GRAVEYARD = "Graveyard";
-const std::vector<QString> LOCATIONS = {DECK, LANE, HAND, GRAVEYARD};
+extern const QString DECK;
+extern const QString LANE;
+extern const QString HAND;
+extern const QString GRAVEYARD;
+extern const std::vector<QString> LOCATIONS;
 
 
 //Card strings
-const QString HERO = "Hero";
-const QString SPELL = "Spell";
-const QString ITEM = "Item";
-const QString CREATURE = "Creature";
-const QString IMPROVEMENT = "Improvement";
-const QString RED = "Red";
-const QString BLACK = "Black";
-const QString BLUE = "Blue";
-const QString NEUTRAL = "Neutral";
-const QString GREEN = "Green";
-const QString RARE = "Rare";
-const QString UNCOMMON = "Uncommon";
-const QString COMMON = "Common";
+extern const QString HERO;
+extern const QString SPELL;
+extern const QString ITEM;
+extern const QString CREATURE;
+extern const QString IMPROVEMENT;
+extern const QString RED;
+extern const QString BLACK;
+extern const QString BLUE;
+extern const QString NEUTRAL;
+extern const QString GREEN;
+extern const QString RARE;
+extern const QString UNCOMMON;
+extern const QString COMMON;
 
 
 

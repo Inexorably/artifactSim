@@ -11,9 +11,8 @@ artifactPosition::artifactPosition(const int laneNum, const QString loc, const i
     for (size_t i = 0; i < LOCATIONS.size(); ++i){
         if (LOCATIONS[i] == loc)
             break;
-        else if (i == LOCATIONS.size() - 1; ++i){
+        else if (i == LOCATIONS.size() - 1){
             qDebug() << "Invalid QString location specified in artifactPosition constructor: " << loc;
-
         }
     }
     lane = laneNum;
@@ -40,7 +39,7 @@ void artifactPosition::setLocation(const QString loc){
     for (size_t i = 0; i < LOCATIONS.size(); ++i){
         if (LOCATIONS[i] == loc)
             break;
-        else if (i == LOCATIONS.size() - 1; ++i){
+        else if (i == LOCATIONS.size() - 1){
             qDebug() << "Invalid QString location specified in artifactPosition constructor: " << loc;
 
         }

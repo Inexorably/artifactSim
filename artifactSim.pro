@@ -31,7 +31,8 @@ SOURCES += \
     artifactcard.cpp \
     artifactplayer.cpp \
     utilities.cpp \
-    artifactposition.cpp
+    artifactposition.cpp \
+    globals.cpp
 
 HEADERS += \
         mainwindow.h \

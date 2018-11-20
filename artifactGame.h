@@ -20,8 +20,9 @@ struct artifactGame{
     /**************************Utility********************************************/
 
     //We need to overload the assignment operator so we can deepy copy the unique_ptr members.
-    void deepCopy(const std::vector<std::unique_ptr<artifactCard>> from, std::vector<std::unique_ptr<artifactCard>> &to);
+    void deepCopy(const std::vector<std::shared_ptr<artifactCard>> from, std::vector<std::shared_ptr<artifactCard>> &to);
     void operator = (const artifactGame &game);
+    artifactGame(const artifactGame &game);
 
     /************************Base Mechanics (Spawning / Buffing, Destroying -- Events that could trigger effects*********/
 
@@ -29,9 +30,9 @@ struct artifactGame{
     //check these vectors for cards that have been waiting for said event to trigger.
     //When a card is deployed / waiting to trigger, it is pushed onto these vectors.
     //When it can no longer trigger (ie dies or effect is negated) it is removed from these vectors.
-    std::vector<std::unique_ptr<artifactCard>> cardsDrawn;
-    std::vector<std::unique_ptr<artifactCard>> cardsDeploymentPhase;
-    std::vector<std::unique_ptr<artifactCard>> cardsArmorIncreased;
+    std::vector<std::shared_ptr<artifactCard>> cardsDrawn;
+    std::vector<std::shared_ptr<artifactCard>> cardsDeploymentPhase;
+    std::vector<std::shared_ptr<artifactCard>> cardsArmorIncreased;
 
     void eventDeploymentPhase();
     //A card is spawned from nothing (not played or resurrected) ie Barracks.

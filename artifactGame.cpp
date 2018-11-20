@@ -9,7 +9,23 @@ artifactGame::artifactGame(){
 
 /********************************Utility*******************************************************/
 
-void artifactGame::deepCopy(const std::vector<std::unique_ptr<artifactCard>> from, std::vector<std::unique_ptr<artifactCard>> &to){
+//Copy constructor.
+artifactGame::artifactGame(const artifactGame &game){
+    players = game.players;
+    activeLane = game.activeLane;
+
+    //Deep copy unique ptr members.
+    /*
+    std::vector<std::unique_ptr<artifactCard>> cardsDrawn;
+    std::vector<std::unique_ptr<artifactCard>> cardsDeploymentPhase;
+    std::vector<std::unique_ptr<artifactCard>> cardsArmorIncreased;
+    */
+    deepCopy(game.cardsDrawn, cardsDrawn);
+    deepCopy(game.cardsDeploymentPhase, cardsDeploymentPhase);
+    deepCopy(game.cardsArmorIncreased, cardsArmorIncreased);
+}
+
+void artifactGame::deepCopy(const std::vector<std::shared_ptr<artifactCard> > from, std::vector<std::shared_ptr<artifactCard> > &to){
     //Adapted from: https://stackoverflow.com/questions/34797849/unique-copy-of-vectorunique-ptr
     //Don't have to dynamically allocate during push_back calls.
     to.reserve(from.size());
@@ -30,7 +46,6 @@ void artifactGame::operator = (const artifactGame &game){
     deepCopy(game.cardsDrawn, cardsDrawn);
     deepCopy(game.cardsDeploymentPhase, cardsDeploymentPhase);
     deepCopy(game.cardsArmorIncreased, cardsArmorIncreased);
-
 }
 
 
@@ -129,12 +144,13 @@ void artifactGame::effect(const artifactCard card, const std::vector<artifactPos
 //For the AI to make decisions.
 std::vector<artifactGame> artifactGame::getPossibleBoardStates(const artifactCard card){
     std::vector<artifactGame> possibleBoardStates;
-    std::vector<std::vector<artifactPosition>> possibleTargets;
+    std::vector<std::vector<artifactPosition>> possibleTargets = getPossibleEffectTargets(card);
     for (size_t i = 0; i < possibleTargets.size(); ++i){
         //TODO: Current board state created correctly?
         //Note that deep copy needed for std::unique_ptr members in artifactGame.
         artifactGame currentBoardState = *this;
-
-
+        currentBoardState.effect(card, possibleTargets[i]);
+        possibleBoardStates.push_back(currentBoardState);
     }
+    return possibleBoardStates;
 }
