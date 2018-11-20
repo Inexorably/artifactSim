@@ -1,0 +1,5 @@
+#include "artifactboard.h"
+
+artifactBoard::artifactBoard(){
+
+}
