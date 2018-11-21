@@ -1,11 +1,17 @@
 #include "utilities.h"
 
+std::random_device rd;
+std::mt19937 gen(rd());
+
+bool trueWithProbability(const double prob){
+    std::bernoulli_distribution d(prob);
+    return d(gen);
+}
+
 //Unlikely to ever need performance from std::map or enum switch.
 artifactCard createCard(QString name){
     //artifactCard(QString name, int health, int armor, int attack, QString type, QString colour, QString rarity);
     //Divide into letter to increase speed at reaching later letters.
-
-
 
 
     if (name == "Axe")
@@ -24,3 +30,4 @@ artifactCard createCard(QString name){
     qDebug() << "Fall through in createCard in utilities.  Card with name " << name << " does not exist.";
     return artifactCard();
 }
+

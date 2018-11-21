@@ -106,6 +106,10 @@ void artifactGame::gameStart(){
         players[i].draw(5);
     }
 
+    //Determine player who goes first -- assign radiant.
+    radiantPlayerNum = int(trueWithProbability(0.5));
+    qDebug() << QString::number(radiantPlayerNum);
+    //TODO
 
 }
 
@@ -122,9 +126,15 @@ void artifactGame::roundStart(){
 
 }
 
+void artifactGame::eventActionPhase(){
+
+}
+
 //Execute a complete round.  Phases: Action -> Combat -> Shopping -> Deployment -> End Phase.
 void artifactGame::executeRound(){
     roundStart();
+    eventActionPhase();
+
 }
 
 /***********************************************Base Game Mechanics / Event Functions*************/

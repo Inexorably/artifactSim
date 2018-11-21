@@ -39,6 +39,8 @@ struct artifactGame{
 
     void executeRound();    //Play out the round.
 
+    int radiantPlayerNum;   //0 or 1.  Other player is dire.  Used for determining who goes first.
+
 
     /************************Base Mechanics (Spawning / Buffing, Destroying -- Events that could trigger effects*********/
 
@@ -49,6 +51,8 @@ struct artifactGame{
     std::vector<artifactCard> cardsDrawn;
     std::vector<artifactCard> cardsDeploymentPhase;
     std::vector<artifactCard> cardsArmorIncreased;
+
+    void eventActionPhase();
 
     void eventDeploymentPhase();
     //A card is spawned from nothing (not played or resurrected) ie Barracks.
