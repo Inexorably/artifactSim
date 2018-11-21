@@ -108,7 +108,7 @@ void artifactGame::gameStart(){
 
     //Determine player who goes first -- assign radiant.
     radiantPlayerNum = int(trueWithProbability(0.5));
-    qDebug() << QString::number(radiantPlayerNum);
+    qDebug() << "Radiant Player: " << QString::number(radiantPlayerNum);
     //TODO
 
 }
@@ -122,7 +122,7 @@ void artifactGame::roundStart(){
         players[i].maxMana++;
     }
 
-    //...........Turn start.............TODO
+    //...........Turn start event?  Does anything trigger on this, or is it all phases.............TODO
 
 }
 

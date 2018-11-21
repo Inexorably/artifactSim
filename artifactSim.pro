@@ -32,7 +32,8 @@ SOURCES += \
     artifactplayer.cpp \
     utilities.cpp \
     artifactposition.cpp \
-    globals.cpp
+    globals.cpp \
+    artifactaiminmax.cpp
 
 HEADERS += \
         mainwindow.h \
@@ -41,7 +42,8 @@ HEADERS += \
     artifactplayer.h \
     globals.h \
     utilities.h \
-    artifactposition.h
+    artifactposition.h \
+    artifactaiminmax.h
 
 FORMS += \
         mainwindow.ui

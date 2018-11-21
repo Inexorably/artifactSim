@@ -25,6 +25,7 @@ MainWindow::~MainWindow(){
 }
 
 void MainWindow::on_testButton_clicked(){
+    ui->testButton->setEnabled(false);
     //qDebug() << "Number of players: " << QString::number(testGame.players.size());
     testGame.createDebugDecks();
     qDebug() << "\t" << QString::number(testGame.players[0].deck.size());
@@ -32,10 +33,12 @@ void MainWindow::on_testButton_clicked(){
     testGame.executeRound();
 
     on_debugViewGameStateButton_clicked();
+    ui->testButton->setEnabled(true);
 
 }
 
 void MainWindow::on_debugViewGameStateButton_clicked(){
+    ui->debugViewGameStateButton->setEnabled(0);
     QString tempQString;
     for (size_t i = 0; i < testGame.players.size(); ++i){
         tempQString = "Player " + QString::number(i);
@@ -73,6 +76,6 @@ void MainWindow::on_debugViewGameStateButton_clicked(){
             tempQString = "\t\t" + QString::number(j) + ": " + testGame.players[i].graveyard[j].getCurrentName();
             ui->debugTextBrowser->append(tempQString);
         }
-
     }
+    ui->debugViewGameStateButton->setEnabled(1);
 }
