@@ -6,8 +6,8 @@
    <rect>
     <x>0</x>
     <y>0</y>
-    <width>400</width>
-    <height>300</height>
+    <width>537</width>
+    <height>451</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -16,11 +16,25 @@
   <widget class="QWidget" name="centralWidget">
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="0">
-     <widget class="QPushButton" name="testButton">
-      <property name="text">
-       <string>Run Test Program</string>
-      </property>
-     </widget>
+     <widget class="QTextBrowser" name="debugTextBrowser"/>
+    </item>
+    <item row="1" column="0">
+     <layout class="QHBoxLayout" name="horizontalLayout">
+      <item>
+       <widget class="QPushButton" name="testButton">
+        <property name="text">
+         <string>Debug: Run Test Program</string>
+        </property>
+       </widget>
+      </item>
+      <item>
+       <widget class="QPushButton" name="debugViewGameStateButton">
+        <property name="text">
+         <string>Debug: View Game State</string>
+        </property>
+       </widget>
+      </item>
+     </layout>
     </item>
    </layout>
   </widget>
@@ -29,7 +43,7 @@
     <rect>
      <x>0</x>
      <y>0</y>
-     <width>400</width>
+     <width>537</width>
      <height>26</height>
     </rect>
    </property>

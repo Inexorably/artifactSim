@@ -22,12 +22,10 @@ struct artifactTower{
 };
 
 struct artifactLane{
-    artifactLane();
     std::vector<artifactCard> cards;
     std::vector<artifactCard> improvements;
     artifactTower tower;
     int currentMana;
-    int baseMana;
 };
 
 //This is likely better as a struct than a class because publically accessible hand, board etc is useful for utility.
@@ -41,10 +39,14 @@ struct artifactPlayer{
     std::vector<artifactCard> fountain;
     std::vector<artifactLane> lanes;
 
+    int maxMana;    //May as well be public because mana can technically go to infinity.
 
-    void draw();
+
+    void draw(const int num);   //Draw num cards from deck.
     void shuffleDeck();
     void reset();
+
+    void populateDeck(QString filename);
 
 
 };

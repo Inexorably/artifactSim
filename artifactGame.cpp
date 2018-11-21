@@ -1,25 +1,51 @@
 #include "artifactGame.h"
 
 artifactGame::artifactGame(){
-    //We need to generate decks in this default constructor.
+    //TODO: We need to generate decks in this default constructor.
     activeLane = 1;
 
+    //Create players.
+    artifactPlayer tempPlayer;
+    for (int i = 0; i < 2; ++i){
+        players.push_back(tempPlayer);
+    }
+
+}
+
+/******************Debug / Testing*****************************************/
+void artifactGame::createDebugDecks(){
+    qDebug() << "artifactGame::createDebugDecks";
+    for (size_t i = 0; i < players.size(); ++i){
+        for (int j = 0; j < 40; ++j){
+            players[i].deck.push_back(createCard("Axe"));
+        }
+    }
+}
+
+void artifactGame::debugOutputdecks(){
+    qDebug() << "artifactGame::debugOutputdecks";
+    for (size_t i = 0; i < players.size(); ++i){
+        qDebug() << "\tPlayer: " << QString::number(i);
+        for (size_t j = 0; j < players[i].deck.size(); ++j){
+            qDebug() << "\t\t" << players[i].deck[j].getCurrentName();
+        }
+    }
 
 }
 
 /********************************Utility*******************************************************/
-
+/*
 //Copy constructor.
 artifactGame::artifactGame(const artifactGame &game){
     players = game.players;
     activeLane = game.activeLane;
 
     //Deep copy unique ptr members.
-    /*
-    std::vector<std::unique_ptr<artifactCard>> cardsDrawn;
-    std::vector<std::unique_ptr<artifactCard>> cardsDeploymentPhase;
-    std::vector<std::unique_ptr<artifactCard>> cardsArmorIncreased;
-    */
+
+    //std::vector<std::unique_ptr<artifactCard>> cardsDrawn;
+    //std::vector<std::unique_ptr<artifactCard>> cardsDeploymentPhase;
+    //std::vector<std::unique_ptr<artifactCard>> cardsArmorIncreased;
+
     deepCopy(game.cardsDrawn, cardsDrawn);
     deepCopy(game.cardsDeploymentPhase, cardsDeploymentPhase);
     deepCopy(game.cardsArmorIncreased, cardsArmorIncreased);
@@ -38,17 +64,68 @@ void artifactGame::operator = (const artifactGame &game){
     activeLane = game.activeLane;
 
     //Deep copy unique ptr members.
-    /*
-    std::vector<std::unique_ptr<artifactCard>> cardsDrawn;
-    std::vector<std::unique_ptr<artifactCard>> cardsDeploymentPhase;
-    std::vector<std::unique_ptr<artifactCard>> cardsArmorIncreased;
-    */
+
+    //std::vector<std::unique_ptr<artifactCard>> cardsDrawn;
+    //std::vector<std::unique_ptr<artifactCard>> cardsDeploymentPhase;
+    //std::vector<std::unique_ptr<artifactCard>> cardsArmorIncreased;
+
     deepCopy(game.cardsDrawn, cardsDrawn);
     deepCopy(game.cardsDeploymentPhase, cardsDeploymentPhase);
     deepCopy(game.cardsArmorIncreased, cardsArmorIncreased);
 }
+*/
+
+/***************************Game setup and nonevent turn functions***********************************************************/
+//Generate the initial ids when the decks are full.
+void artifactGame::assignIds(){
+    int nextId = 0;
+    for (size_t i = 0; i < players.size(); ++i){
+        if (!players[i].hand.empty()){
+            qDebug() << "artifactGame::assignIds: Function called when hand drawn from deck.";
+        }
+        for (size_t j = 0; j < players[i].deck.size(); ++j){
+            players[i].deck[j].modifyId(nextId);
+        }
+    }
+}
+
+//Call all functions here that need to be ran at game start.
+void artifactGame::gameStart(){
+    //Each card has unique id to help track for effects that trigger on events.  std ptrs are inferior for this due to need to
+    //run multiple game instances and easily copy between.  While deep copy is easily overcome, updating ptrs as cards move between vectors
+    //like hand deck and grave is really spooky.
+    assignIds();
+
+    //Player specific modifications.
+    for (size_t i = 0; i < players.size(); ++i){
+        //Start at 2 mana because we call the roundStart function on the first round which will incremement the maxMana.
+        players[i].maxMana = 2;
+        players[i].shuffleDeck();
+
+        //Players start with 5 cards.
+        players[i].draw(5);
+    }
 
 
+}
+
+
+void artifactGame::roundStart(){
+    for (size_t i = 0; i < players.size(); ++i){
+        //Draw 2 cards at the beginning of each round.
+        players[i].draw(2);
+        //Increment mana.
+        players[i].maxMana++;
+    }
+
+    //...........Turn start.............TODO
+
+}
+
+//Execute a complete round.  Phases: Action -> Combat -> Shopping -> Deployment -> End Phase.
+void artifactGame::executeRound(){
+    roundStart();
+}
 
 /***********************************************Base Game Mechanics / Event Functions*************/
 
@@ -59,7 +136,7 @@ void artifactGame::eventDeploymentPhase(){
         //TODO: Can improve by making lane specfic vectors of pointers for events so that this will not be needed.  However, unlikely needed.
         //More problems with this -- a can activate in graveyard for example, so it would not be a part of lane vectors, and additional vector would still be needed.
         //Minimal performance gains.
-        if (activeLane == cardsDeploymentPhase[i]->position.getLane()){
+        if (activeLane == cardsDeploymentPhase[i].position.getLane()){
             //Activate the effect of the card.
 
             //When the possibleEffectTargets function is called, return possible targets, then check resulting board states
@@ -67,7 +144,7 @@ void artifactGame::eventDeploymentPhase(){
             //tl;dr: generate a vector of board states and min max it.
 
             //std::vector<artifactGame> possibleBoardStates = getPossibleBoardStates();
-            std::vector<std::vector<artifactPosition>> targets = getPossibleEffectTargets(*cardsDeploymentPhase[i]);
+            std::vector<std::vector<artifactPosition>> targets = getPossibleEffectTargets(cardsDeploymentPhase[i]);
             //
         }
     }
@@ -91,6 +168,7 @@ void artifactGame::eventSpawnCard(artifactCard card, const artifactPosition spaw
     //Position should be valid.
     //TODO: Check that using .begin() with .insert is correct.
     card.position = spawnLocation;
+    card.modifyId(nextId);
     players[spawnLocation.getSide()].lanes[spawnLocation.getLane()].cards.insert(players[spawnLocation.getSide()].lanes[spawnLocation.getLane()].cards.begin() + spawnLocation.getIndex(), card);
 
     //Loop through this lane and adjust the positions of the cards in the lane that changed position (all after spawned card).

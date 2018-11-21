@@ -4,11 +4,18 @@
 //artifactPlayer functions
 /***********************************************/
 
-void artifactPlayer::draw(){
-    if (deck.empty())
-        return;
-    hand.push_back(deck[0]);
-    deck.erase(deck.begin());
+//Draw num cards from the deck.
+void artifactPlayer::draw(const int num){
+    qDebug() << "artifactPlayer::draw";
+    for (int i = 0; i < num; ++i){
+        if (deck.empty()){
+            qDebug() << "\tDeck empty.";
+            return;
+        }
+        qDebug() << "\tAttempt to push_back onto hand.";
+        hand.push_back(deck[0]);
+        deck.erase(deck.begin());
+    }
 }
 
 void artifactPlayer::shuffleDeck(){
@@ -41,6 +48,11 @@ void artifactPlayer::reset(){
     }
 }
 
+//TODO: Implement.
+void artifactPlayer::populateDeck(QString filename){
+
+}
+
 /***********************************************/
 //artifactTower functions
 /***********************************************/
@@ -71,7 +83,4 @@ void artifactTower::modifyHealth(const int num){
 /***********************************************/
 
 
-artifactLane::artifactLane(){
-    baseMana = 1;
-    currentMana = 1;
-}
+

@@ -16,6 +16,7 @@ artifactCard::artifactCard(){
 }
 
 artifactCard::artifactCard(QString name, int health, int armor, int attack, QString type, QString colourQString, QString rare){
+    //qDebug() << "artifactCard::artifactCard(QString name, int health, int armor, int attack, QString type, QString colourQString, QString rare)";
     baseName = name;
     currentName = name;
     baseHealth = health;
@@ -57,6 +58,11 @@ void artifactCard::modifyHealth(const int num){
 
 void artifactCard::modifyAttack(const int num){
     currentAttack += num;
+}
+
+void artifactCard::modifyId(int &nextId){
+    id = nextId;
+    nextId++;
 }
 
 QString artifactCard::getType() const{

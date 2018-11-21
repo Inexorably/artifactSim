@@ -24,6 +24,7 @@ class artifactCard{
         void modifyArmor(const int num);
         void modifyHealth(const int num);
         void modifyAttack(const int num);
+        void modifyId(int &nextId);
         QString getType() const;
         QString getColour() const;
         QString getRarity() const;
@@ -41,6 +42,10 @@ class artifactCard{
         QString cardType;
         QString colour;
         QString rarity;
+
+        //If we are not doing the vector of std ptrs to cards to keep track of stuff that can trigger on effects,
+        //we need a way to tell cards apart.  Thus, we use an id.
+        int id;
 };
 
 
