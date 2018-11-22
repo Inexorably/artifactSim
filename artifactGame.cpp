@@ -107,7 +107,8 @@ void artifactGame::gameStart(){
     }
 
     //Determine player who goes first -- assign radiant.
-    radiantPlayerNum = int(trueWithProbability(0.5));
+    radiantPlayerNum = static_cast<int>(trueWithProbability(0.5));
+    initiativePlayer = radiantPlayerNum;
     qDebug() << "Radiant Player: " << QString::number(radiantPlayerNum);
     //TODO
 
@@ -122,12 +123,24 @@ void artifactGame::roundStart(){
         players[i].maxMana++;
     }
 
+    //Begin in the first lane.
+    activeLane = 0;
+
     //...........Turn start event?  Does anything trigger on this, or is it all phases.............TODO
 
 }
 
 void artifactGame::eventActionPhase(){
+    //We determine the active player.  Note that this can change with initiative.  Can use initiativePlayer, then set active player to initiativePlayer, then switch activePlayer between 0 and 1 with !.
+    activePlayer = initiativePlayer;
 
+    //Check cards that we can play (have mana to).
+    for (size_t i = 0; i < players[activePlayer].hand.size(); ++i){
+        //If we can play the card:
+        if (players[activePlayer].hand[i].getManaCost() <= players[activePlayer].lanes.currentMana){
+            //CONTINUE here.
+        }
+    }
 }
 
 //Execute a complete round.  Phases: Action -> Combat -> Shopping -> Deployment -> End Phase.
@@ -220,7 +233,7 @@ void artifactGame::effect(const artifactCard card, const std::vector<artifactPos
 
     //Testing with Barracks.
     if (card.getCurrentName() == "Barracks"){
-        //targets should have 1 memeber.
+        //targets should have 1 member.
         //Spawn a melee creep card with 2/0/4 stat line in the row of Barracks.
         //artifactCard(QString name, int health, int armor, int attack, QString type, QString colourQString, QString rare);
         artifactCard meleeCreep("Melee Creep", 4, 0, 2, CREATURE, NEUTRAL, COMMON);
@@ -230,15 +243,73 @@ void artifactGame::effect(const artifactCard card, const std::vector<artifactPos
 }
 
 //For the AI to make decisions.
-std::vector<artifactGame> artifactGame::getPossibleBoardStates(const artifactCard card){
+std::vector<artifactGame> artifactGame::getPossibleBoardStates(const artifactCard card) const{
+    //Make a copy of the current boardState, we don't want to damage the board state in this.
+    artifactGame startBoardState = *this;
     std::vector<artifactGame> possibleBoardStates;
-    std::vector<std::vector<artifactPosition>> possibleTargets = getPossibleEffectTargets(card);
-    for (size_t i = 0; i < possibleTargets.size(); ++i){
-        //TODO: Current board state created correctly?
-        //Note that deep copy needed for std::unique_ptr members in artifactGame.
-        artifactGame currentBoardState = *this;
-        currentBoardState.effect(card, possibleTargets[i]);
-        possibleBoardStates.push_back(currentBoardState);
+    //An interim vector for how the tree branches both on body placement and effect.
+    std::vector<artifactGame> interimBoardStates;
+
+    //Creatures or heroes -- adding a body to the board from the hand.
+    if (card.getType() == HERO || card.getType() == CREATURE){
+        //Make sure the card is in the player's hand.
+        bool inHand = false;
+        for (size_t i = 0; i < players[activePlayer].hand.size(); ++i){
+            if (players[activePlayer].hand[i].getId() == card.getId()){
+                inHand = true;
+                //It was played so we remove from the hand in startBoardState.
+                startBoardState.players[activePlayer.hand.remove(startBoardState.players[activePlayer.hand.begin() + i)];
+                break;
+            }
+        }
+
+        //Card is in hand.
+        if (inHand){
+            //Play in possible positions.
+            //Loop through the lanes, and the index of each lane.
+            for (int i = 0; i < 3; i++){
+                for (size_t j = 0; j < players[activePlayer].lanes[i].cards.size(); ++j){
+                    artifactGame currentBoardState = startBoardState;
+                    currentBoardState.players[activePlayer].lanes[i].cards.insert(currentBoardState.players[activePlayer].lanes[i].cards.begin() + j);
+                    possibleBoardStates.push_back(currentBoardState);
+                }
+            }
+
+            //Have vector of artifactGames now representing placement tree.
+            //Now account for effects.
+            //TODO: Improve performance by making above code act on interimBoardStates so we don't waste time copying.
+            interimBoardStates = possibleBoardStates;
+            possibleBoardStates.clear();
+            for (size_t i = 0; i < interimBoardStates.size(); ++i){
+                std::vector<std::vector<artifactPosition>> possibleTargets = interimBoardStates.getPossibleEffectTargets(card);
+                for (size_t j = 0; j < possibleTargets.size(); ++j){
+                    //TODO: Current board state created correctly?
+                    artifactGame currentBoardState = interimBoardStates[i];
+                    currentBoardState.effect(card, possibleTargets[j]);
+                    possibleBoardStates.push_back(currentBoardState);
+                }
+            }
+        }
+
+
     }
+
+    //Spells or improvemnts -- things that do not add a body onto the board.  Also creatures / heros with effects that are already on board.
+
+    if (!inHand){
+        std::vector<std::vector<artifactPosition>> possibleTargets = getPossibleEffectTargets(card);
+        for (size_t i = 0; i < possibleTargets.size(); ++i){
+            //TODO: Current board state created correctly?
+            artifactGame currentBoardState = startBoardState;
+            currentBoardState.effect(card, possibleTargets[i]);
+            possibleBoardStates.push_back(currentBoardState);
+        }
+    }
+
+
+
+
+
+
     return possibleBoardStates;
 }

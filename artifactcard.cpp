@@ -28,6 +28,7 @@ artifactCard::artifactCard(QString name, int health, int armor, int attack, QStr
     cardType = type;
     colour = colourQString;
     rarity = rare;
+    manaCost = -1;
 }
 
 int artifactCard::getCurrentArmor() const{
@@ -72,9 +73,13 @@ void artifactCard::modifyAttack(const int num){
     currentAttack += num;
 }
 
-void artifactCard::modifyId(int &nextId){
+void artifactCard::modifyId(const int &nextId){
     id = nextId;
     nextId++;
+}
+
+int artifactCard::getId() const{
+   return id;
 }
 
 QString artifactCard::getType() const{

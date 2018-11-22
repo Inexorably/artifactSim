@@ -12,6 +12,8 @@
 //A basic, game-state based min max ai for doing initial prototyping of engine and structure.
 //This should take a vector of board states which represent the branches in which a decision will result in game states.
 //Type is vector<artifactGame>.
+
+//TODO: Check board state assuming end of turn to simulate combat changes.
 class artifactAIMinMax{
 public:
     artifactAIMinMax();

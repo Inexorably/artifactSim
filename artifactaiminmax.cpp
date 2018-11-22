@@ -11,7 +11,8 @@ artifactAIMinMax::artifactAIMinMax(){
     //Initialize as random values for base genetic popoulation.
     std::random_device rd;
     std::mt19937 gen(rd());
-    std::uniform_real_distribution<> dis(1.0, 2.0);
+    //Distribution should be near to the actual values that the coefs will be multiplying, to avoid overt biasing of naturally larger values (like armor vs health).
+    std::uniform_real_distribution<> dis(0.0, 20.0);
 
     coefArmorA = dis(gen);
     coefHealthA = dis(gen);
@@ -19,6 +20,14 @@ artifactAIMinMax::artifactAIMinMax(){
     coefArmorB = dis(gen);
     coefHealthB = dis(gen);
     coefAttackB = dis(gen);
+
+    coefLaneWidth = dis(gen);
+    coefLaneMana = dis(gen);
+    coefLaneHealthAbs = dis(gen);
+    coefLaneHealthDelta = dis(gen);
+    coefLaneImprovements = dis(gen);
+    coefHandAbs = dis(gen);
+    coefHandDelta = dis(gen);
 }
 
 //TODO: Include parameter that takes card name string and gives numeric strength of effect.

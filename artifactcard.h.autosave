@@ -27,8 +27,8 @@ class artifactCard{
         int getCurrentArmor() const;
         int getCurrentHealth() const;
         int getCurrentAttack() const;
-        void modifyId(int &nextId);
-        int getId();
+        void modifyId(const int &nextId);
+        int getId() const;
         QString getType() const;
         QString getColour() const;
         QString getRarity() const;

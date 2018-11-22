@@ -15,8 +15,7 @@
 struct artifactGame{
     artifactGame();
     std::vector<artifactPlayer> players;
-    //The lane that is currently active.
-    int activeLane;
+
 
     /******************Debug / Testing*****************************************/
     void createDebugDecks();
@@ -36,11 +35,11 @@ struct artifactGame{
     int nextId; //The next id to be assigned.  For example, if we spawn a card, we must give it an id number.
     void roundStart();
     void gameStart();  //A top level function that is called at the start of each game.  Calls functions such as assignIds.
-
     void executeRound();    //Play out the round.
-
     int radiantPlayerNum;   //0 or 1.  Other player is dire.  Used for determining who goes first.
-
+    int activeLane; //The lane that is currently active.  0, 1, or 2.
+    int activePlayer;   //0 or 1.
+    int initiativePlayer; //Who has initiative?  0 or 1.
 
     /************************Base Mechanics (Spawning / Buffing, Destroying -- Events that could trigger effects*********/
 
@@ -52,6 +51,7 @@ struct artifactGame{
     std::vector<artifactCard> cardsDeploymentPhase;
     std::vector<artifactCard> cardsArmorIncreased;
 
+    //Would be nice to have event class and do signals / slots but that can cause incorrect order executions (ie signal sent, inconsistent amount of code executed, function emitted).
     void eventActionPhase();
 
     void eventDeploymentPhase();
