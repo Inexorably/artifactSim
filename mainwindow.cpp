@@ -1,7 +1,6 @@
 #include "mainwindow.h"
 #include "ui_mainwindow.h"
 
-#include "artifactGame.h"
 
 /*******************************/
 //Globals for debugging///////////////////////////////////////
@@ -31,6 +30,9 @@ void MainWindow::on_testButton_clicked(){
     qDebug() << "\t" << QString::number(testGame.players[0].deck.size());
     testGame.gameStart();
     testGame.executeRound();
+
+    artifactAIMinMax testAI;
+    qDebug() << "Evaluating card at: " << QString::number(testAI.evaluateCard(testGame.players[0].deck[0]));
 
     on_debugViewGameStateButton_clicked();
     ui->testButton->setEnabled(true);

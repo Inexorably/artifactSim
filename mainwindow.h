@@ -3,6 +3,9 @@
 
 #include <QMainWindow>
 
+#include "artifactGame.h"
+#include "artifactaiminmax.h"
+
 namespace Ui {
 class MainWindow;
 }

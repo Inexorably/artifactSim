@@ -4,7 +4,7 @@
 #include "artifactcard.h"
 #include "globals.h"
 
-
+#include <random>
 #include <vector>
 
 //From globals.h
